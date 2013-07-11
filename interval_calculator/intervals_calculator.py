@@ -36,7 +36,7 @@ timedelta_to_secods(duration)
       
 '''
 from datetime import timedelta
-
+from interval_calculator.bx.quicksect import IntervalNode
 
 
 def timedelta_to_secods(d):
@@ -239,6 +239,42 @@ def substract_intervals(i1s,i2s,debug=False):
     if debug: print "i1:"+str(i1s)
     if debug: print "i2:"+str(i2s)
     if debug: print "res:"+str(i1sorted)        
+    return merge_intervals(i1sorted, debug)
+
+
+def overlap_find(start, end, tree):
+    "Returns a list with the overlapping intervals"
+    out = []
+    tree.intersect( start, end, lambda x: out.append(x) )
+    return [ (x.start, x.end) for x in out ]
+
+def substract_intervals_itree(i1s,i2s,debug=False):
+
+    i1sorted = merge_intervals(i1s)
+    i2sorted = merge_intervals(i2s)
+
+    start, end = i2sorted[0]
+    tree = IntervalNode( start, end )
+    for start, end in i2sorted[1:]:
+        tree = tree.insert( start, end )
+
+
+
+    res = []
+    for i1 in i1sorted:
+        overlap = overlap_find(i1[0], i1[1] , tree)
+        if len(overlap)>0:
+            for i2 in overlap:
+                r = substruct_one(i1, i2, debug)
+                res.extend(r)
+        else:
+            res.append(i1)
+    i1sorted = merge_intervals(res)
+    #if debug: print str(i2)+" res`:"+str(res)
+
+    if debug: print "i1:"+str(i1s)
+    if debug: print "i2:"+str(i2s)
+    if debug: print "res:"+str(i1sorted)
     return merge_intervals(i1sorted, debug)
 
 

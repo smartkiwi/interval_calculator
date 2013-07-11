@@ -4,7 +4,7 @@ from intervals_calculator import merge_intervals,\
     merge_sorted_intervals, calculate_duration_in_period, calculate_duration_datetime,\
     timedelta_to_secods, intersect_sorted_intervals, intersect_intervals,\
     intersect_one_with_many, substruct_one, substract_intervals,\
-    has_intersection
+    has_intersection, substract_intervals_itree
 from datetime import datetime, timedelta
 
 class TestSequenceFunctions(unittest.TestCase):
@@ -424,6 +424,54 @@ class TestSequenceFunctions(unittest.TestCase):
         exp_res = [ [15,20],[25,30],[45,50],[55,60],[70,75] ]
         #print exp_res
         self.assertEqual(r,exp_res)        
+
+    def test_substruct_intervals_fast(self):
+#        i1 = [[1,5],[8,19]]
+#        i2 = [[2,3],[6,9],[11,13]]
+        print "t1 "
+        i1 = [[1,5],[8,19]]
+        i2 = [[2,3]]
+        r = substract_intervals_itree(i1,i2)
+        #print r
+        #exp_res = [[1,2],[4,5],[9,10],[13,19]]
+        exp_res = [[1,2],[3,5],[8,19]]
+        self.assertEqual(r,exp_res)
+
+
+        print "t2 "
+        i1 = [[1,5],[8,19],[21,25]]
+        i2 = [[2,3]]
+        r = substract_intervals_itree(i1,i2)
+        #print r
+        #exp_res = [[1,2],[4,5],[9,10],[13,19]]
+        exp_res = [[1,2],[3,5],[8,19],[21,25]]
+        self.assertEqual(r,exp_res)
+
+
+        print "t3 "
+        i1 = [[1,5],[8,19]]
+        i2 = [[2,3],[10,11]]
+        r = substract_intervals_itree(i1,i2)
+        #print r
+        #exp_res = [[1,2],[4,5],[9,10],[13,19]]
+        exp_res = [[1,2],[3,5],[8,10],[11,19]]
+        #print exp_res
+        self.assertEqual(r,exp_res)
+
+
+
+
+        print "t4 "
+        i1 = [[15,35],[40,65],[70,75],[90,100]]
+        i2 = [[5,10],[20,25],[30,45],[50,55],[60,65],[80,85],[90,100]]
+        r = substract_intervals_itree(i1,i2)
+        #print r
+        #exp_res = [[1,2],[4,5],[9,10],[13,19]]
+        exp_res = [ [15,20],[25,30],[45,50],[55,60],[70,75] ]
+        #print exp_res
+        self.assertEqual(r,exp_res)
+
+
 
     def test_has_intersection(self):
         
