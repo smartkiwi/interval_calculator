@@ -263,9 +263,14 @@ def substract_intervals_itree(i1s,i2s,debug=False):
     res = []
     for i1 in i1sorted:
         overlap = overlap_find(i1[0], i1[1] , tree)
+        if debug:
+            print "interval out of i1: %s" % i1
+            print "overlap of i2 with this i1 interval: %s" % overlap
         if len(overlap)>0:
             for i2 in overlap:
                 r = substruct_one(i1, i2, debug)
+                if debug:
+                    print "substruct_out result: i1 %s - i2 %s = %s" % (i1,i2,r)
                 res.extend(r)
         else:
             res.append(i1)
@@ -318,13 +323,38 @@ def substruct_one(i1,i2,debug=False):
     if i1[0]>i2[1] and i1[1]>i2[1]:
         if debug: print "case 5"
         re.append(i1)
-        return re    
-
-
-        
-
-
+        return re
     return re
+
+
+def substract_many_out_of_one(i1, i2s, debug=False):
+    """substracts intervals defined in i2s from one interval i1
+    @precondition every interval out of i2s intersects i1
+    """
+    i1_local = [i1[0], i1[1]]
+    r = []
+    for i2 in i2s:
+        if i2[0]<=i1_local[0] and i2[1]>=i1_local[0] and i2[1]<i1_local[1]:
+            i1_local[0] = i2[1]
+        elif i2[0]>i1_local[0] and i2[1]<=i1_local[1]:
+            r.append(([i1_local[0], i2[0]]))
+            i1_local[0] = i2[1]
+
+        elif i2[0]>i1_local[0] and i2[1]>i1_local[1] and i2[0]<i1_local[1]:
+            r.append(([i1_local[0], i2[0]]))
+            i1_local = []
+            break
+        elif i2[0]>i1_local[0] and i2[0]>i1_local[1]:
+            break
+
+    if len(i1_local)==2:
+        r.append(i1_local)
+
+
+
+    return r
+
+
 
 
 def calculate_duration_in_period(intervals):
