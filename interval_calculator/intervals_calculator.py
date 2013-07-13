@@ -346,8 +346,15 @@ def substract_many_out_of_one(i1, i2s, debug=False):
             break
         elif i2[0]>i1_local[0] and i2[0]>i1_local[1]:
             break
+        elif i1_local[0]==i2[0] and i1_local[1]==i2[1]:
+            i1_local = []
+            break
+        elif i2[0]<i1_local[0] and i2[1]>i1_local[1]:
+            i1_local = []
+            break
 
-    if len(i1_local)==2:
+
+    if len(i1_local)==2 and i1_local[0]!=i1_local[1]:
         r.append(i1_local)
 
 
