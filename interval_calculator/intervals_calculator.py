@@ -263,15 +263,15 @@ def substract_intervals_itree(i1s,i2s,debug=False):
     res = []
     for i1 in i1sorted:
         overlap = overlap_find(i1[0], i1[1] , tree)
+        overlap = merge_intervals(overlap)
         if debug:
             print "interval out of i1: %s" % i1
             print "overlap of i2 with this i1 interval: %s" % overlap
         if len(overlap)>0:
-            for i2 in overlap:
-                r = substruct_one(i1, i2, debug)
-                if debug:
-                    print "substruct_out result: i1 %s - i2 %s = %s" % (i1,i2,r)
-                res.extend(r)
+            r = substract_many_out_of_one(i1, overlap, debug)
+            if debug:
+                print "substruct_out result: i1 %s - overlap %s = %s" % (i1,overlap,r)
+            res.extend(r)
         else:
             res.append(i1)
     i1sorted = merge_intervals(res)
