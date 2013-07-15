@@ -9,3 +9,9 @@ Performance test shows 20x difference for substracting 10 000 out of 10 000 inte
 
 2011-10
 v1.0 - naive implementation (N^2 for substructing N out N intervals)
+
+
+License
+===================
+
+Interval Calculator is licensed under MIT, see MIT-LICENSE.txt.
