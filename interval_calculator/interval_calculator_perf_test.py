@@ -1,7 +1,7 @@
 from random import randint, seed
 import unittest
 import time
-from interval_calculator.intervals_calculator import merge_intervals, calculate_duration_in_period, intersect_sorted_intervals, substract_intervals, intersect_intervals
+from interval_calculator.intervals_calculator import merge_intervals, calculate_duration_in_period, intersect_sorted_intervals, substract_intervals, intersect_intervals, substract_intervals_itree
 
 
 
@@ -39,6 +39,8 @@ class TestSequenceFunctions(unittest.TestCase):
     def tearDown(self):
         self._curr_duration()
 
+
+
     def test_perf1(self):
         # generate 10 thousand random intervals
         seed(10)
@@ -52,8 +54,6 @@ class TestSequenceFunctions(unittest.TestCase):
         duration = calculate_duration_in_period(result)
         print duration
         self._curr_duration()
-
-
     def test_perf2(self):
         # generate 10 thousand random intervals
         seed(10)
@@ -77,12 +77,21 @@ class TestSequenceFunctions(unittest.TestCase):
         print "result 2 total duration: %s"  % duration
         self._curr_duration()
         substr_result = substract_intervals(input1,input2)
-        print "substruct input1-input2: %s" % substr_result
-        print "substruct duration %s" % calculate_duration_in_period(substr_result)
-
-
-
+        print "substruct input1-input2: %s" % len(substr_result)
         self._curr_duration()
+        print "substruct duration %s" % calculate_duration_in_period(substr_result)
+        self._curr_duration()
+        substr_result_fast = substract_intervals_itree(input1,input2)
+        self._curr_duration()
+        print "substract_intervals_itree input1-input2: %s" % len(substr_result)
+        print "substract_intervals_itree duration %s" % calculate_duration_in_period(substr_result_fast)
+        self.assertEqual(substr_result_fast,substr_result)
+
+        self.assertEqual(calculate_duration_in_period(substr_result_fast),calculate_duration_in_period(substr_result))
+
+
+
+
         #duration = calculate_duration_in_period(intersect)
         #print duration
         self._curr_duration()
